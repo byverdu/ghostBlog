@@ -188,10 +188,12 @@ body {
 
 ::-moz-selection {
     background: #D6EDFF;
+    text-shadow: 0 0 1px RGB(228, 67, 77);
 }
 
 ::selection {
     background: #D6EDFF;
+    text-shadow: 0 0 1px RGB(228, 67, 77);
 }
 
 h1, h2, h3,
@@ -1381,7 +1383,30 @@ span[class*=char]{
     border: 1px solid white !important;
 }
 
+strong{
+    color: RGB(228, 67, 77);
+}
 
+a:hover{
+
+    color: RGB(228, 67, 77);
+    transition: color .5s ease;
+    text-decoration: none;
+}
+
+code{
+    padding: 1px 3px;
+  font-family: Inconsolata, monospace, sans-serif;
+  font-size: 0.85em;
+  white-space: pre-wrap;
+  background: rebeccapurple;
+  border-radius: 3px;
+  color: white;
+}
+
+pre > code{
+    color: black;
+}
 
 /* ==========================================================================
    10. Media Queries - Smaller than 900px
