@@ -1435,8 +1435,8 @@ pre > code{
 @keyframes move_rocket{
 
     0%{bottom: -17px;transform: rotate(-47deg);}
-    25%{bottom: -10px;transform: rotate(-27deg)}
-    50%{bottom: 0;transform: rotate(-15deg);}
+    25%{bottom: -10px;transform: rotate(-40deg)}
+    50%{bottom: 0;transform: rotate(-33deg);}
     70%{bottom: 6px}
     100%{bottom: 10px}
 }
@@ -1635,6 +1635,10 @@ pre > code{
    ========================================================================== */
 
 @media only screen and (max-width: 500px) {
+
+    .scrollup{
+        right: 50px;
+    }
 
     .main-header {
         margin-bottom: 15px;
