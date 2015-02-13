@@ -274,6 +274,8 @@ setupMiddleware = function (blogAppInstance, adminApp) {
     blogApp.use('/content/images', storage.getStorage().serve());
     blogApp.use('/ghost/scripts', express['static'](path.join(corePath, '/built/scripts'), {maxAge: utils.ONE_YEAR_MS}));
     blogApp.use('/public', express['static'](path.join(corePath, '/built/public'), {maxAge: utils.ONE_YEAR_MS}));
+    //sitemap for ghost
+    blogApp.use('/sitemap', express['static'](path.join(corePath, '../../../sitemap'), {maxAge: utils.ONE_HOUR_MS}));
 
     // First determine whether we're serving admin or theme content
     blogApp.use(decideIsAdmin);
