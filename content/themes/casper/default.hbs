@@ -15,14 +15,15 @@
     <link rel="shortcut icon" href="assets/favicon.ico">
 
     {{! Styles'n'Scripts }}
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{{asset "css/screen.css"}}" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family="Noto+Serif:400,700,400italic|Open+Sans:700,400"" />
     <link href='http://fonts.googleapis.com/css?family=Quicksand' rel='stylesheet' type='text/css'>
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
     <link type="text/plain" rel="author" href="{{@blog.url}}/humans.txt" />
-
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
 
     {{!-- Google Analytics --}}
     <script>
@@ -39,9 +40,19 @@
     {{ghost_head}}
 </head>
 <body class="{{body_class}}">
-
+    
     {{! Everything else gets inserted here }}
     {{{body}}}
+
+<!-- Scroll To top code-->
+
+    <a href="#" class="scrollup"> <!-- Trigger animation and positioning--> 
+              <span id="rocket" class="fa fa-rocket anime_rock"></span>
+              <span class="clouds hide"> <!-- Initially hided -->
+                <i class="fa fa-cloud cloud_1"></i>
+                <i class="fa fa-cloud cloud_2"></i>
+              </span>
+    </a> 
 
     <footer class="site-footer clearfix">
         <section><a href="{{@blog.url}}/humans.txt">Humans.txt</a></section>

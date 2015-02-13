@@ -62,6 +62,37 @@
         // Lettering
 
         $('.page-title').lettering();
+
+        // Scroll to top
+
+        $(window).scroll(function(){
+            if ($(this).scrollTop() > 150) {
+           
+                $('.scrollup').fadeIn();
+           
+            } else if($(this).scrollTop() == 0){
+
+                $('#rocket').removeClass('move_rocket')
+                $('.clouds').addClass('hide')
+
+            }  else {
+           
+                $('.scrollup').fadeOut();
+            }
+        }); 
+ 
+        $('.scrollup').click(function(){
+            
+            $('.clouds').removeClass('hide');
+
+            $('.cloud_1').addClass('cloud_color');
+
+            $('#rocket').addClass('move_rocket');
+
+            $("html, body").animate({ scrollTop: 0 }, 2000);
+
+            return false;
+        });
     });
 
     // smartresize

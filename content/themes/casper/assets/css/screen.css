@@ -1395,18 +1395,116 @@ a:hover{
 }
 
 code{
-    padding: 1px 3px;
-  font-family: Inconsolata, monospace, sans-serif;
-  font-size: 0.85em;
-  white-space: pre-wrap;
   background: rebeccapurple;
-  border-radius: 3px;
   color: white;
 }
 
 pre > code{
     color: black;
 }
+
+.social{
+    list-style: none;
+    display: flex;
+    width: 150px;
+    margin: auto;
+}
+
+.social li{
+    margin: -35px 10%;
+    font-size: 35px;
+    width: 45px;
+}
+
+.social li a:hover{
+    font-size: 40px;
+    transition: font-size .2s linear;
+}
+
+/* Scroll to top rules*/
+
+@keyframes cloud_color{
+
+    0%{color: #FFCA0C; opacity: 0.8}
+    30%{color: #E4434D; opacity: 0.8}
+    60%{color: #FFCA05; opacity: 0.8}
+    100%{color: #FF2C0B; opacity: 0.8}
+
+}
+
+@keyframes move_rocket{
+
+    0%{bottom: -17px;transform: rotate(-47deg);}
+    25%{bottom: -10px;transform: rotate(-27deg)}
+    50%{bottom: 0;transform: rotate(-15deg);}
+    70%{bottom: 6px}
+    100%{bottom: 10px}
+}
+
+.move_rocket{
+    animation: move_rocket 2s 1;
+}
+
+.cloud_color{
+    animation: cloud_color 2s 1;
+}
+
+
+
+
+/*Scroll to top */
+
+.scrollup {
+    width: 40px;
+    height: 40px;
+    position: fixed;
+    bottom: 50px;
+    right: 100px;
+    display: none;
+    border-radius: 10px;
+    box-shadow: 0 1px 5px #333;
+    background: linear-gradient(to top,#67D4E8,#4595E8);
+    z-index: 1;
+
+}
+
+.scrollup:hover{color: black}
+
+.fa-rocket{
+    transform: rotate(-47deg);
+    position: relative;
+    bottom: -17px; 
+    left: 10px;
+}
+
+.cloud_1,
+.cloud_2{
+    position: relative;
+}
+
+.cloud_1{
+    
+    top: -13px;
+    right: -5px;
+    color: grey
+}
+
+.cloud_2{
+    
+    top: -43px;
+    right: -18px;
+    color: #BFBFBF
+}
+
+
+.hide{
+    position: absolute;
+    display: block;
+    top: -9999px;
+    left: -9999px;
+
+}
+
 
 /* ==========================================================================
    10. Media Queries - Smaller than 900px
