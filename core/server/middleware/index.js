@@ -277,6 +277,7 @@ setupMiddleware = function (blogAppInstance, adminApp) {
     //sitemap for ghost
     blogApp.use('/sitemap', express['static'](path.join(corePath, '../../../sitemap'), {maxAge: utils.ONE_HOUR_MS}));
 
+
     // First determine whether we're serving admin or theme content
     blogApp.use(decideIsAdmin);
     blogApp.use(updateActiveTheme);
@@ -297,6 +298,7 @@ setupMiddleware = function (blogAppInstance, adminApp) {
 
     // Serve robots.txt if not found in theme
     blogApp.use(serveSharedFile('robots.txt', 'text/plain', utils.ONE_HOUR_S));
+    blogApp.use(serveSharedFile('humans.txt', 'text/plain', utils.ONE_HOUR_S));
 
     // site map
     sitemapHandler(blogApp);
