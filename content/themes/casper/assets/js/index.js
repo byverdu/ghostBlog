@@ -59,6 +59,9 @@
 
         $(".scroll-down").arctic_scroll();
 
+        // Lettering
+
+        $('.page-title').lettering();
     });
 
     // smartresize

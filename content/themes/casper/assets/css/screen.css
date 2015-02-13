@@ -665,7 +665,7 @@ margin on the iframe, cause it breaks stuff. */
     font-size: 5rem;
     letter-spacing: -1px;
     font-weight: 700;
-    font-family: "Open Sans", sans-serif;
+    font-family: 'Quicksand', sans-serif;
     color: #fff;
 }
 
@@ -1329,6 +1329,59 @@ body:not(.post-template) .post-title {
     float: left;
 }
 
+/* ==========================================================================
+    Own styles
+   ========================================================================== */
+
+span[class*=char]{
+    
+    font-size: 7rem;
+    margin-left: -5px;
+    border: 0 solid transparent;
+    border-radius: 5px;
+    padding: 4px;
+}
+
+.char1,
+.char2{
+    font-family: monospace;
+    font-weight: 400;
+    background: rgb(255,255,255);
+    background: rgba(255,255,255,0.8);
+    color: black;
+    position: absolute;
+    transform: rotate(-25deg);
+}
+.char1{
+      margin-left: -80px !important;
+}
+
+.char2{
+      margin-left: -40px !important;
+}
+
+.char3{
+    background: linear-gradient(RGB(216, 108, 35) 20%,RGB(248, 167, 61));
+}
+.char4{
+    background: linear-gradient(RGB(250, 103, 189) 20%,RGB(161, 42, 100));
+    color: black;
+}
+
+.char5{
+    background: linear-gradient(RGB(84, 185, 105) 20%,RGB(59, 106, 60));
+}
+
+.char6{
+    background: linear-gradient(RGB(252, 253, 101) 20%,RGB(229, 197, 64));
+    color: black;
+}
+
+.char7{
+    border: 1px solid white !important;
+}
+
+
 
 /* ==========================================================================
    10. Media Queries - Smaller than 900px
@@ -1367,7 +1420,7 @@ body:not(.post-template) .post-title {
     }
 
     .page-title {
-        font-size: 4rem;
+        font-size: 7rem;
         letter-spacing: -1px;
     }
 
@@ -1573,7 +1626,8 @@ body:not(.post-template) .post-title {
     }
 
     .page-title {
-        font-size: 3rem;
+        font-size: 7rem;
+        margin-left: 75px;
     }
 
     .post-excerpt p {
