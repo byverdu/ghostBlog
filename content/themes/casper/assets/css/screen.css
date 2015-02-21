@@ -1505,6 +1505,131 @@ pre > code{
 
 }
 
+/* ==========================================================================
+   ## Tooltip example 
+   ========================================================================== */
+
+
+.pop_up_demo {
+  position: relative;
+  width: 350px;
+  margin: 80px auto; }
+  .pop_up_demo .nav_bar {
+    list-style: none;
+    display: flex; }
+    .pop_up_demo .nav_bar li {
+      margin-left: 40px; }
+      .pop_up_demo .nav_bar li i {
+        font-size: 34px;
+        color: #ac4142; }
+
+.home::before {
+  visibility: hidden;
+  transition: visibility 0s ease-in 0.5s;
+  position: absolute;
+  content: '';
+  color: transparent;
+  border-top: 10px solid rgba(25, 25, 25, 0.3);
+  border-right: 20px solid transparent;
+  border-left: 20px solid transparent;
+  top: -15px;
+  margin-left: -4px; }
+.home::after {
+  visibility: hidden;
+  transition: visibility 0s ease-in 0.5s;
+  position: absolute;
+  font-size: 20px;
+  box-shadow: 0px 0px 3px;
+  padding: 7px;
+  border-radius: 11px;
+  content: "Home";
+  top: -60px;
+  left: 128px;
+  background-color: rgba(172, 65, 66, 0.3); }
+.home:hover::before, .home:hover::after {
+  visibility: visible; }
+
+.about::before {
+  visibility: hidden;
+  transition: visibility 0s ease-in 0.5s;
+  position: absolute;
+  content: '';
+  color: transparent;
+  border-bottom: 10px solid rgba(25, 25, 25, 0.3);
+  border-right: 20px solid transparent;
+  border-left: 20px solid transparent;
+  top: 43px;
+  margin-left: -7px; }
+.about::after {
+  visibility: hidden;
+  transition: visibility 0s ease-in 0.5s;
+  position: absolute;
+  font-size: 20px;
+  box-shadow: 0px 0px 3px;
+  padding: 7px;
+  border-radius: 11px;
+  content: "About";
+  top: 53px;
+  left: 196px;
+  background-color: rgba(172, 65, 66, 0.3); }
+.about:hover::before, .about:hover::after {
+  visibility: visible; }
+
+.settings::before {
+  visibility: hidden;
+  transition: visibility 0s ease-in 0.5s;
+  position: absolute;
+  content: '';
+  color: transparent;
+  border-bottom: 15px solid transparent;
+  border-top: 15px solid transparent;
+  border-left: 15px solid rgba(25, 25, 25, 0.3);
+  top: 0;
+  margin-left: -20px; }
+.settings::after {
+  visibility: hidden;
+  transition: visibility 0s ease-in 0.5s;
+  position: absolute;
+  font-size: 20px;
+  box-shadow: 0px 0px 3px;
+  padding: 7px;
+  border-radius: 11px;
+  content: "Settings";
+  top: -7px;
+  left: -47px;
+  background-color: rgba(172, 65, 66, 0.3); }
+.settings:hover::before, .settings:hover::after {
+  visibility: visible; }
+
+.archive::before {
+  visibility: hidden;
+  transition: visibility 0s ease-in 0.5s;
+  position: absolute;
+  content: '';
+  color: transparent;
+  border-bottom: 15px solid transparent;
+  border-top: 15px solid transparent;
+  border-right: 15px solid rgba(25, 25, 25, 0.3);
+  top: 7px;
+  margin-left: 42px; }
+.archive::after {
+  visibility: hidden;
+  transition: visibility 0s ease-in 0.5s;
+  position: absolute;
+  font-size: 20px;
+  box-shadow: 0px 0px 3px;
+  padding: 7px;
+  border-radius: 11px;
+  content: "Archive";
+  top: 0;
+  right: -82px;
+  background-color: rgba(172, 65, 66, 0.3); }
+.archive:hover::before, .archive:hover::after {
+  visibility: visible; }
+
+/* ==========================================================================
+   ## Tooltip example 
+   ========================================================================== */
 
 /* ==========================================================================
    10. Media Queries - Smaller than 900px
