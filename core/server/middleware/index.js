@@ -282,6 +282,7 @@ setupMiddleware = function (blogAppInstance, adminApp) {
 
     // Serve robots.txt if not found in theme
     blogApp.use(serveSharedFile('robots.txt', 'text/plain', utils.ONE_HOUR_S));
+	    blogApp.use(serveSharedFile('humans.txt', 'text/plain', utils.ONE_HOUR_S));
 
     // site map
     sitemapHandler(blogApp);
