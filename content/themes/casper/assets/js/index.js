@@ -59,6 +59,13 @@
 
         $(".scroll-down").arctic_scroll();
 
+        // Navigation open/close
+        
+        $(".menu-button, .nav-cover, .nav-close").on("click", function(e){
+            e.preventDefault();
+            $("body").toggleClass("nav-opened nav-closed");
+        });
+
         // Lettering
 
         $('.page-title').lettering();

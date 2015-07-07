@@ -5,6 +5,9 @@
 <header class="main-header {{#if @blog.cover}}" style="background-image: url({{@blog.cover}}){{else}}no-cover{{/if}}">
     <nav class="main-nav overlay clearfix">
         {{#if @blog.logo}}<a class="blog-logo" href="{{@blog.url}}"><img src="{{@blog.logo}}" alt="Blog Logo" /></a>{{/if}}
+        {{#if @blog.navigation}}
+            <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+        {{/if}}
         <a class="subscribe-button icon-feed" href="{{@blog.url}}/rss/">Subscribe</a>
     </nav>
     <div class="vertical">
@@ -16,11 +19,12 @@
     <a class="scroll-down icon-arrow-left" href="#content" data-offset="-45"><span class="hidden">Scroll Down</span></a>
 </header>
 
-<ul class="social">
+
+{{!-- <ul class="social">
     <li><a title="Twitter" href="https://twitter.com/byverdu"><i class="fa fa-twitter"></i></a></li>
     <li><a title="Github" href="https://github.com/byverdu"><i class="fa fa-github"></i></a></li>
     <li><a title="Send email" href="mailto:byverdu@gmail.com?subject=say_hello_to_Albert"><i class="fa fa-envelope-square"></i></a></li>
-</ul>
+</ul> --}}
 
 {{! The main content area on the homepage }}
 <main id="content" class="content" role="main">
