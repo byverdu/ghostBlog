@@ -17,7 +17,7 @@ config = {
                       service: 'Gmail',
                   auth: {
                            user: 'byverdu@gmail.com',
-                       pass: '@M@rl@1977'
+                       pass: '!Torr3s@N@'
                  }
            }},
 
@@ -50,8 +50,8 @@ config = {
                       service: 'Gmail',
                       auth: {
 		             user: 'byverdu@gmail.com',
-                             pass: '@M@rl@1977'
-                           } 
+                             pass: '!Torr3s@N@'
+                           }
                     }},
         database: {
             client: 'sqlite3',
