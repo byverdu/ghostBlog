@@ -1,0 +1,7 @@
+<ul class="tag-container">
+  {{#foreach tags}}
+    <li class="tag-item">
+      <a href="{{url}}" title="{{name}}" class="tag tag-{{id}} {{slug}}">{{name}}<span class="hole"></span></a>
+    </li>
+  {{/foreach}}
+</ul>

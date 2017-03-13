@@ -719,7 +719,7 @@ body.nav-opened .nav {
 .subscribe-button:hover{
 
     border-color: rgba(255,255,255,0.6);
-} 
+}
 
 /* Create a bouncing scroll-down arrow on homepage with cover image */
 .scroll-down {
@@ -1612,7 +1612,7 @@ body:not(.post-template) .post-title {
    ========================================================================== */
 
 span[class*=char]{
-    
+
     font-size: 7rem;
     margin-left: -5px;
     border: 0 solid transparent;
@@ -1697,6 +1697,59 @@ pre > code{
     transition: font-size .2s linear;
 }
 
+.tag-container {
+  display: flex;
+  padding-left: 0 !important;
+}
+
+.tag-container .tag-item {
+  position: relative;
+  flex-grow: 1;
+  list-style: none;
+}
+
+.tag-container .tag {
+  position: relative;
+  padding: 4px 24px 4px 4px;
+  background: linear-gradient(RGB(216, 108, 35) 20%,RGB(248, 167, 61));
+  color: white !important;
+}
+
+.tag-container a:hover {
+  text-decoration: none;
+  background: linear-gradient(RGB(84, 185, 105) 20%,RGB(59, 106, 60));
+}
+
+.tag-container .tag:after {
+  content: "";
+    position: absolute;
+    border-width: 14px 0px 14px 20px;
+    border-style: solid;
+    border-color: white transparent white transparent;
+    top: -1px;
+    right: 0;
+}
+
+.tag-container .hole {
+  border: .15em solid white;
+  border-radius: 50%;
+  position: absolute;
+  top: .7em;
+  right: .5em;
+}
+
+.tag-container .hole:after{
+  background-image: radial-gradient(circle at 11px 0, rgba(0,0,0,0) 9px, #000 10px, rgba(0,0,0,0) 11px);
+    content: "";
+    position: absolute;
+    width: 30px;
+    z-index: 12;
+    height: 20px;
+    top: -1px;
+    background-repeat: repeat no-repeat;
+    background-size: 20px 11px;
+}
+
 /* Scroll to top rules*/
 
 @keyframes cloud_color{
@@ -1749,7 +1802,7 @@ pre > code{
 .fa-rocket{
     transform: rotate(-47deg);
     position: relative;
-    bottom: -17px; 
+    bottom: -17px;
     left: 10px;
 }
 
@@ -1759,14 +1812,14 @@ pre > code{
 }
 
 .cloud_1{
-    
+
     top: -13px;
     right: -5px;
     color: grey
 }
 
 .cloud_2{
-    
+
     top: -43px;
     right: -18px;
     color: #BFBFBF
@@ -1782,7 +1835,7 @@ pre > code{
 }
 
 /* ==========================================================================
-   ## Tooltip example 
+   ## Tooltip example
    ========================================================================== */
 
 
