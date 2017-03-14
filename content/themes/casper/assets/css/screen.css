@@ -162,7 +162,7 @@ table { border-collapse: collapse; border-spacing: 0; }
     content: "\f608";
 }
 .icon-menu:before {
-    content: "\f609";
+    content: "\2714";
 }
 /*
     IMPORTANT: When making any changes to the icon font, be sure to increment
@@ -1748,6 +1748,27 @@ pre > code{
     top: -1px;
     background-repeat: repeat no-repeat;
     background-size: 20px 11px;
+}
+.social-container {
+  position: absolute;
+  left: 0;
+}
+
+.social-container svg:hover {
+  fill: #f45;
+}
+
+.social-list {
+  padding-left: 2rem;
+}
+
+.social-item {
+  list-style-type: none;
+  margin-bottom: 0;
+}
+
+.social-item:hover {
+  /*cursor: pointer;*/
 }
 
 /* Scroll to top rules*/
