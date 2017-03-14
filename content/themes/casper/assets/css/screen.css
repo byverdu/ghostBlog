@@ -1750,7 +1750,8 @@ pre > code{
     background-size: 20px 11px;
 }
 .social-container {
-  position: absolute;
+  position: fixed;
+  top: 34%;
   left: 0;
 }
 
@@ -1759,16 +1760,19 @@ pre > code{
 }
 
 .social-list {
-  padding-left: 2rem;
+  padding-left: 0;
 }
 
 .social-item {
   list-style-type: none;
   margin-bottom: 0;
+  margin-left: -20px;
+  transition: margin-left .1s;
 }
 
 .social-item:hover {
-  /*cursor: pointer;*/
+  cursor: pointer;
+  margin-left: 0;
 }
 
 /* Scroll to top rules*/
