@@ -1756,7 +1756,7 @@ pre > code{
 }
 
 .social-container svg:hover {
-  fill: #f45;
+  fill: RGB(228, 67, 77);
 }
 
 .social-list {
@@ -1987,10 +1987,21 @@ pre > code{
    11. Media Queries - Smaller than 900px
    ========================================================================== */
 
+.post-meta.mobile {
+  display: none;
+}
+
 @media only screen and (max-width: 900px) {
 
     blockquote {
         margin-left: 0;
+    }
+
+    .post-meta.mobile {
+      display: block;
+    }
+    .post-meta.desktop {
+      display: none;
     }
 
     .main-header {
@@ -1999,7 +2010,6 @@ pre > code{
         box-sizing: border-box;
         height: auto;
         min-height: 240px;
-        height: 60vh;
         padding: 15% 0;
     }
 
@@ -2116,6 +2126,10 @@ pre > code{
     .read-next-story.no-cover + .read-next-story.no-cover {
         border-top: rgba(0,0,100,0.06) 1px solid;
         border-left: none;
+    }
+
+    .social-container {
+      display: none;
     }
 
 }
