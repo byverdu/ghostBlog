@@ -35,9 +35,11 @@
     $document.ready(function () {
 
         var $postContent = $(".post-content");
-        $postContent.fitVids();
         var $socialContainer = $(".social-container");
         var $contentPos = $("#content").last().position();
+        var $containerTags = $(".tag-container-list");
+
+        $postContent.fitVids();
         $socialContainer.css('top', $contentPos.top + "px");
 
         function updateImageWidth() {
@@ -104,10 +106,30 @@
             return false;
         });
 
+        // dummy example for scrolling tags container
+        $containerTags.scroll(function(event) {
+          var $leftArrow = $('.arrow-left');
+          var $rightArrow = $('.arrow-right');
+          var $width = $(this).width();
+          var $maxScroll = $(this).scrollLeft();
+          var $lastItemPos = $(this).find('.tag-item').last().position().left;
+          var hasReachEnd = ($width + $maxScroll) >= $lastItemPos;
+          if ($maxScroll === 0) {
+            $leftArrow.hide();
+          }
+          if (hasReachEnd) {
+            $rightArrow.hide();
+            $leftArrow.show();
+          } else {
+            $rightArrow.show();
+          }
+        });
+
+        // top position for socialContainer when the
+        // window is resized
         $(window).bind("resize", function(event) {
           var $contentPosResize = $("#content").last().position();
           if ($socialContainer.css('display') !== "none") {
-            console.log('slsl');
             $socialContainer.css('top', $contentPosResize.top + "px");
           }
         });

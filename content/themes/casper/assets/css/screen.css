@@ -506,7 +506,7 @@ body.nav-opened .site-wrapper {
     display: table;
     width: 100%;
     height: 50%;
-    margin-bottom: 5rem;
+    margin-bottom: 6rem;
     text-align: center;
     background: #222 no-repeat center center;
     background-size: cover;
@@ -701,7 +701,7 @@ body.nav-opened .nav {
     height: 38px;
     padding: 0 20px;
     border: transparent 1px solid;
-    color: #9EABB3;
+    color: #fff;
     text-align: center;
     font-size: 12px;
     text-transform: uppercase;
@@ -827,6 +827,7 @@ body.nav-opened .nav {
 .nav-closed .menu-button {
     color: #fff;
     border-color: rgba(255, 255, 255, 0.6);
+    display: none;
 }
 .nav-closed .menu-button:hover {
     color: #222;
@@ -1702,7 +1703,8 @@ pre > code{
   padding-left: 0 !important;
 }
 
-.tag-container .tag-item {
+.tag-container .tag-item,
+.tag-container-index li{
   position: relative;
   flex-grow: 1;
   list-style: none;
@@ -1772,6 +1774,68 @@ pre > code{
 .social-item:hover {
   cursor: pointer;
   margin-left: 0;
+}
+
+.tag-container-index {
+  position: relative;
+  max-width: 750px;
+  width: 80%;
+  margin: 10px auto;
+}
+
+.tag-container-list {
+  display: flex;
+    position: absolute;
+    top: -60px;
+    right: 0;
+    left: 0;
+    max-width: 750px;
+    width: 100%;
+    margin: 10px auto;
+    overflow: auto;
+    padding: 0;
+    height: 40px;
+}
+
+.tag-container-list .tag-item {
+  margin: 0 10px;
+  display: inline-table;
+}
+
+.tag-container-list .tag-item a {
+  padding: 8px;
+  text-decoration: none;
+}
+.tag-container-list .tag-item a:hover {
+  background: #D6EDFF;
+  text-shadow: 0 0 1px RGB(228, 67, 77);
+  font-size: 20px
+}
+.tag-container-list::-webkit-scrollbar {
+  -webkit-appearance: none;
+  height: 2px;
+}
+
+.tag-container-list::-webkit-scrollbar-thumb:horizontal {
+  width: 50px;
+}
+.tag-container-list::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: #E4434D;
+}
+
+.tag-container-index span[class*="arrow"] {
+  border: 5px solid;
+  position: absolute;
+  top: -35px;
+}
+
+.tag-container-index .arrow-left {
+  left: -25px;
+  display: none;
+}
+.tag-container-index .arrow-right {
+  right: -25px;
 }
 
 /* Scroll to top rules*/
@@ -1996,6 +2060,10 @@ pre > code{
         margin-left: 0;
     }
 
+    .nav-closed .menu-button {
+        display: block;
+    }
+
     .post-meta.mobile {
       display: block;
     }
@@ -2010,6 +2078,7 @@ pre > code{
         height: auto;
         min-height: 240px;
         padding: 15% 0;
+        margin-bottom: 5rem;
     }
 
     .scroll-down,
@@ -2127,7 +2196,8 @@ pre > code{
         border-left: none;
     }
 
-    .social-container {
+    .social-container,
+    .tag-container-index {
       display: none;
     }
 

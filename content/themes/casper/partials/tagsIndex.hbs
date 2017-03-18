@@ -1,0 +1,13 @@
+{{#get "tags"}}
+  <div class="tag-container-index">
+    <span class="arrow-left"></span>
+    <ul class="tag-container-list">
+      {{#foreach tags}}
+      <li class="tag-item">
+        <a href="{{url}}" title="{{name}}" class="tag tag-{{id}} {{slug}}">{{name}}</a>
+      </li>
+      {{/foreach}}
+    </ul>
+    <span class="arrow-right"></span>
+  </div>
+{{/get}}
