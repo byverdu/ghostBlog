@@ -2,6 +2,10 @@
  * Main JS file for Casper behaviours
  */
 
+ function getScrollableWidth(item) {
+   return item.scrollWidth - item.clientWidth;
+ }
+
 /* globals jQuery, document */
 (function ($, sr, undefined) {
     "use strict";
@@ -35,7 +39,12 @@
     $document.ready(function () {
 
         var $postContent = $(".post-content");
+        var $socialContainer = $(".social-container");
+        var $contentPos = $("#content").last().position();
+        var $containerTags = $(".tag-container-list");
+
         $postContent.fitVids();
+        $socialContainer.css('top', $contentPos.top + "px");
 
         function updateImageWidth() {
             var $this = $(this),
@@ -60,7 +69,7 @@
         $(".scroll-down").arctic_scroll();
 
         // Navigation open/close
-        
+
         $(".menu-button, .nav-cover, .nav-close").on("click", function(e){
             e.preventDefault();
             $("body").toggleClass("nav-opened nav-closed");
@@ -74,22 +83,22 @@
 
         $(window).scroll(function(){
             if ($(this).scrollTop() > 150) {
-           
+
                 $('.scrollup').fadeIn();
-           
+
             } else if($(this).scrollTop() == 0){
 
                 $('#rocket').removeClass('move_rocket')
                 $('.clouds').addClass('hide')
 
             }  else {
-           
+
                 $('.scrollup').fadeOut();
             }
-        }); 
- 
+        });
+
         $('.scrollup').click(function(){
-            
+
             $('.clouds').removeClass('hide');
 
             $('.cloud_1').addClass('cloud_color');
@@ -99,6 +108,62 @@
             $("html, body").animate({ scrollTop: 0 }, 2000);
 
             return false;
+        });
+
+        var scrollPosition = 0;
+        // dummy example for scrolling tags container
+        $containerTags.scroll(function(event) {
+          var $battery = $('.battery');
+          var baseClass = 'fa-battery-';
+          var scrollableWidth = getScrollableWidth(this);
+          var $actualScroll = $(this).scrollLeft();
+          var firstStep = (scrollableWidth / 4);
+          var secondStep = (scrollableWidth / 3);
+          var thirdStep = (scrollableWidth / 2);
+          var fourthStep = (scrollableWidth / 1) - 50;
+
+          if ($actualScroll > scrollPosition) {
+            // scrolling to the right
+            if ($actualScroll === 0) {
+              $battery.removeClass(baseClass + '3').addClass(baseClass + '4');
+            }
+            if ($actualScroll > 0 && $actualScroll < firstStep) {
+              $battery.removeClass(baseClass + '4').addClass(baseClass + '3');
+            }
+            if ($actualScroll > firstStep && $actualScroll < secondStep) {
+              $battery.removeClass(baseClass + '3').addClass(baseClass + '2');
+            }
+            if ($actualScroll > secondStep && $actualScroll < thirdStep) {
+              $battery.removeClass(baseClass + '2').addClass(baseClass + '1');
+            }
+            if ($actualScroll > fourthStep) {
+              $battery.removeClass(baseClass + '1').addClass(baseClass + '0');
+            }
+          } else {
+            // scrolling to the left
+            if ($actualScroll >= 0 && $actualScroll < firstStep) {
+              $battery.removeClass(baseClass + '3').addClass(baseClass + '4');
+            }
+            if ($actualScroll > firstStep && $actualScroll < secondStep) {
+              $battery.removeClass(baseClass + '2').addClass(baseClass + '3');
+            }
+            if ($actualScroll > secondStep && $actualScroll < thirdStep) {
+              $battery.removeClass(baseClass + '1').addClass(baseClass + '2');
+            }
+            if ($actualScroll < fourthStep && $actualScroll > thirdStep) {
+                $battery.removeClass(baseClass + '0').addClass(baseClass + '1');
+            }
+          }
+          scrollPosition = event.currentTarget.scrollLeft;
+        });
+
+        // top position for socialContainer when the
+        // window is resized
+        $(window).bind("resize", function(event) {
+          var $contentPosResize = $("#content").last().position();
+          if ($socialContainer.css('display') !== "none") {
+            $socialContainer.css('top', $contentPosResize.top + "px");
+          }
         });
     });
 

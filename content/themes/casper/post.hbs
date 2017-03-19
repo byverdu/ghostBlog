@@ -16,8 +16,12 @@
 
         <header class="post-header">
             <h1 class="post-title">{{title}}</h1>
-            <section class="post-meta">
-                <time class="post-date" datetime="{{date format='YYYY-MM-DD'}}">{{date format="DD MMMM YYYY"}}</time> {{tags prefix=" on "}}
+            <section class="post-meta desktop">
+                <time class="post-date" datetime="{{date format='YYYY-MM-DD'}}">{{date format="DD MMMM YYYY"}}</time> {{>tagsPost}}
+            </section>
+            <section class="post-meta mobile">
+              <time class="post-date" datetime="{{date format='YYYY-MM-DD'}}">{{date format="DD MMMM YYYY"}}</time> {{tags prefix=" on "}}
+
             </section>
         </header>
 
@@ -78,7 +82,7 @@
     <script type="text/javascript">
         var disqus_shortname = 'byverdu'; // required: replace example with your forum shortname
         var disqus_identifier = '{{post.id}}';
-     
+
         /* * * DON'T EDIT BELOW THIS LINE * * */
         (function() {
             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

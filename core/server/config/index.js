@@ -3,22 +3,21 @@
 var path          = require('path'),
     Promise       = require('bluebird'),
     chalk         = require('chalk'),
-    crypto        = require('crypto'),
     fs            = require('fs'),
     url           = require('url'),
     _             = require('lodash'),
-    knex          = require('knex'),
+
     validator     = require('validator'),
-    readDirectory = require('../utils/read-directory'),
+    generateAssetHash = require('../utils/asset-hash'),
     readThemes    = require('../utils/read-themes'),
     errors        = require('../errors'),
     configUrl     = require('./url'),
     packageInfo   = require('../../../package.json'),
+    i18n          = require('../i18n'),
     appRoot       = path.resolve(__dirname, '../../../'),
     corePath      = path.resolve(appRoot, 'core/'),
     testingEnvs   = ['testing', 'testing-mysql', 'testing-pg'],
-    defaultConfig = {},
-    knexInstance;
+    defaultConfig = {};
 
 function ConfigManager(config) {
     /**
@@ -78,31 +77,26 @@ ConfigManager.prototype.init = function (rawConfig) {
     // just the object appropriate for this NODE_ENV
     self.set(rawConfig);
 
-    return Promise.all([readThemes(self._config.paths.themePath), readDirectory(self._config.paths.appPath)]).then(function (paths) {
-        self._config.paths.availableThemes = paths[0];
-        self._config.paths.availableApps = paths[1];
-        return self._config;
-    });
+    return Promise.resolve(self._config);
 };
 
-function configureDriver(client) {
-    var pg;
+ConfigManager.prototype.loadExtras = function () {
+    var self = this;
 
-    if (client === 'pg' || client === 'postgres' || client === 'postgresql') {
-        try {
-            pg = require('pg');
-        } catch (e) {
-            pg = require('pg.js');
-        }
-
-        // By default PostgreSQL returns data as strings along with an OID that identifies
-        // its type.  We're setting the parser to convert OID 20 (int8) into a javascript
-        // integer.
-        pg.types.setTypeParser(20, function (val) {
-            return val === null ? null : parseInt(val, 10);
+    return self.loadThemes()
+        .then(function () {
+            return self._config;
         });
-    }
-}
+};
+
+ConfigManager.prototype.loadThemes = function () {
+    var self = this;
+
+    return readThemes(self._config.paths.themePath)
+        .then(function (result) {
+            self._config.paths.availableThemes = result;
+        });
+};
 
 /**
  * Allows you to set the config object.
@@ -110,18 +104,37 @@ function configureDriver(client) {
  */
 ConfigManager.prototype.set = function (config) {
     var localPath = '',
-        defaultStorage = 'local-file-store',
+        defaultStorageAdapter = 'local-file-store',
+        defaultSchedulingAdapter = 'SchedulingDefault',
+        activeStorageAdapter,
+        activeSchedulingAdapter,
         contentPath,
-        activeStorage,
-        storagePath,
+        schedulingPath,
         subdir,
-        assetHash;
+        assetHash,
+        timezone = 'Etc/UTC';
+
+    // CASE: remember existing timezone
+    if (this._config.theme && this._config.theme.timezone) {
+        timezone = this._config.theme.timezone;
+    }
+
+    // CASE: override existing timezone
+    if (config && config.theme && config.theme.timezone) {
+        timezone = config.theme.timezone;
+    }
 
     // Merge passed in config object onto our existing config object.
     // We're using merge here as it doesn't assign `undefined` properties
     // onto our cached config object.  This allows us to only update our
     // local copy with properties that have been explicitly set.
     _.merge(this._config, config);
+
+    // Special case for the database config, which should be overridden not merged
+
+    if (config && config.database) {
+        this._config.database = config.database;
+    }
 
     // Special case for the them.navigation JSON object, which should be overridden not merged
     if (config && config.theme && config.theme.navigation) {
@@ -144,34 +157,52 @@ ConfigManager.prototype.set = function (config) {
 
     subdir = localPath === '/' ? '' : localPath;
 
+    if (!_.isEmpty(subdir)) {
+        this._config.slugs.protected.push(subdir.split('/').pop());
+    }
+
     // Allow contentPath to be over-written by passed in config object
     // Otherwise default to default content path location
     contentPath = this._config.paths.contentPath || path.resolve(appRoot, 'content');
 
-    assetHash = this._config.assetHash ||
-        (crypto.createHash('md5').update(packageInfo.version + Date.now()).digest('hex')).substring(0, 10);
+    assetHash = this._config.assetHash || generateAssetHash();
 
-    if (!knexInstance && this._config.database && this._config.database.client) {
-        configureDriver(this._config.database.client);
-        knexInstance = knex(this._config.database);
+    // read storage adapter from config file or attach default adapter
+    this._config.storage = this._config.storage || {};
+    activeStorageAdapter = this._config.storage.active || defaultStorageAdapter;
+
+    // read scheduling adapter(s) from config file or attach default adapter
+    this._config.scheduling = this._config.scheduling || {};
+    activeSchedulingAdapter = this._config.scheduling.active || defaultSchedulingAdapter;
+
+    // storage.active can be an object like {images: 'my-custom-image-storage-adapter', themes: 'local-file-storage'}
+    // we ensure that passing a string to storage.active still works, but internal it's always an object
+    if (_.isString(activeStorageAdapter)) {
+        this._config.storage = _.merge(this._config.storage, {
+            active: {
+                images: activeStorageAdapter,
+                themes: defaultStorageAdapter
+            }
+        });
+    } else {
+        // ensure there is a default image storage adapter
+        if (!this._config.storage.active.images) {
+            this._config.storage.active.images = defaultStorageAdapter;
+        }
+
+        // ensure there is a default theme storage adapter
+        // @TODO: right now we only support theme uploads to local file storage
+        // @TODO: we need to change reading themes from disk on bootstrap (see loadThemes)
+        this._config.storage.active.themes = defaultStorageAdapter;
     }
 
-    // Protect against accessing a non-existant object.
-    // This ensures there's always at least a storage object
-    // because it's referenced in multiple places.
-    this._config.storage = this._config.storage || {};
-    activeStorage = this._config.storage.active || defaultStorage;
-
-    if (activeStorage === defaultStorage) {
-        storagePath = path.join(corePath, '/server/storage/');
+    if (activeSchedulingAdapter === defaultSchedulingAdapter) {
+        schedulingPath = path.join(corePath, '/server/scheduling/');
     } else {
-        storagePath = path.join(contentPath, 'storage');
+        schedulingPath = path.join(contentPath, '/scheduling/');
     }
 
     _.merge(this._config, {
-        database: {
-            knex: knexInstance
-        },
         ghostVersion: packageInfo.version,
         paths: {
             appRoot:          appRoot,
@@ -180,37 +211,45 @@ ConfigManager.prototype.set = function (config) {
             configExample:    path.join(appRoot, 'config.example.js'),
             corePath:         corePath,
 
-            storage:          path.join(storagePath, activeStorage),
+            storagePath: {
+                default: path.join(corePath, '/server/storage/'),
+                custom:  path.join(contentPath, 'storage/')
+            },
 
             contentPath:      contentPath,
             themePath:        path.resolve(contentPath, 'themes'),
             appPath:          path.resolve(contentPath, 'apps'),
+            dataPath:         path.resolve(contentPath, 'data'),
             imagesPath:       path.resolve(contentPath, 'images'),
+            internalAppPath:  path.join(corePath, '/server/apps/'),
             imagesRelPath:    'content/images',
 
             adminViews:       path.join(corePath, '/server/views/'),
             helperTemplates:  path.join(corePath, '/server/helpers/tpl/'),
-            exportPath:       path.join(corePath, '/server/data/export/'),
-            lang:             path.join(corePath, '/shared/lang/'),
 
             availableThemes:  this._config.paths.availableThemes || {},
-            availableApps:    this._config.paths.availableApps || {},
             clientAssets:     path.join(corePath, '/built/assets/')
         },
-        storage: {
-            active: activeStorage
+        maintenance: {},
+        scheduling: {
+            active: activeSchedulingAdapter,
+            path: schedulingPath
         },
         theme: {
             // normalise the URL by removing any trailing slash
-            url: this._config.url ? this._config.url.replace(/\/$/, '') : ''
+            url: this._config.url ? this._config.url.replace(/\/$/, '') : '',
+            timezone: timezone
         },
         routeKeywords: {
             tag: 'tag',
             author: 'author',
             page: 'page',
             preview: 'p',
-            private: 'private'
+            private: 'private',
+            subscribe: 'subscribe',
+            amp: 'amp'
         },
+        internalApps: ['private-blogging', 'subscribers', 'amp'],
         slugs: {
             // Used by generateSlug to generate slugs for posts, tags, users, ..
             // reserved slugs are reserved but can be extended/removed by apps
@@ -219,16 +258,36 @@ ConfigManager.prototype.set = function (config) {
             'category', 'dashboard', 'feed', 'ghost-admin', 'login', 'logout',
             'page', 'pages', 'post', 'posts', 'public', 'register', 'setup',
             'signin', 'signout', 'signup', 'user', 'users', 'wp-admin', 'wp-login'],
-            protected: ['ghost', 'rss']
+            protected: ['ghost', 'rss', 'amp']
         },
+        // used in middleware/validation/upload.js
+        // if we finish the data/importer logic, each type selects an importer
         uploads: {
-            // Used by the upload API to limit uploads to images
-            extensions: ['.jpg', '.jpeg', '.gif', '.png', '.svg', '.svgz'],
-            contentTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml']
+            subscribers: {
+                extensions: ['.csv'],
+                contentTypes: ['text/csv', 'application/csv', 'application/octet-stream']
+            },
+            images: {
+                extensions: ['.jpg', '.jpeg', '.gif', '.png', '.svg', '.svgz'],
+                contentTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml']
+            },
+            db: {
+                extensions: ['.json', '.zip'],
+                contentTypes: ['application/octet-stream', 'application/json', 'application/zip', 'application/x-zip-compressed']
+            },
+            themes: {
+                extensions: ['.zip'],
+                contentTypes: ['application/zip', 'application/x-zip-compressed', 'application/octet-stream']
+            }
         },
         deprecatedItems: ['updateCheck', 'mail.fromaddress'],
         // create a hash for cache busting assets
-        assetHash: assetHash
+        assetHash: assetHash,
+        preloadHeaders: this._config.preloadHeaders || false,
+        times: {
+            cannotScheduleAPostBeforeInMinutes: 2,
+            publishAPostBySchedulerToleranceInMinutes: 2
+        }
     });
 
     // Also pass config object to
@@ -270,8 +329,9 @@ ConfigManager.prototype.load = function (configFilePath) {
             Promise.resolve(pendingConfig).then(function () {
                 return self.validate();
             }).then(function (rawConfig) {
-                resolve(self.init(rawConfig));
-            }).catch(reject);
+                return self.init(rawConfig);
+            }).then(resolve)
+            .catch(reject);
         });
     });
 };
@@ -290,9 +350,9 @@ ConfigManager.prototype.writeFile = function () {
                 error;
 
             if (!templateExists) {
-                error = new Error('Could not locate a configuration file.');
+                error = new Error(i18n.t('errors.config.couldNotLocateConfigFile.error'));
                 error.context = appRoot;
-                error.help = 'Please check your deployment for config.js or config.example.js.';
+                error.help = i18n.t('errors.config.couldNotLocateConfigFile.help');
 
                 return reject(error);
             }
@@ -300,14 +360,20 @@ ConfigManager.prototype.writeFile = function () {
             // Copy config.example.js => config.js
             read = fs.createReadStream(configExamplePath);
             read.on('error', function (err) {
-                errors.logError(new Error('Could not open config.example.js for read.'), appRoot, 'Please check your deployment for config.js or config.example.js.');
+                errors.logError(
+                    new Error(i18n.t('errors.config.couldNotOpenForReading.error', {file: 'config.example.js'})),
+                    appRoot,
+                    i18n.t('errors.config.couldNotOpenForReading.help'));
 
                 reject(err);
             });
 
             write = fs.createWriteStream(configPath);
             write.on('error', function (err) {
-                errors.logError(new Error('Could not open config.js for write.'), appRoot, 'Please check your deployment for config.js or config.example.js.');
+                errors.logError(
+                    new Error(i18n.t('errors.config.couldNotOpenForWriting.error', {file: 'config.js'})),
+                    appRoot,
+                    i18n.t('errors.config.couldNotOpenForWriting.help'));
 
                 reject(err);
             });
@@ -348,24 +414,33 @@ ConfigManager.prototype.validate = function () {
 
     // Check that our url is valid
     if (!validator.isURL(config.url, {protocols: ['http', 'https'], require_protocol: true})) {
-        errors.logError(new Error('Your site url in config.js is invalid.'), config.url, 'Please make sure this is a valid url before restarting');
+        errors.logError(
+            new Error(i18n.t('errors.config.invalidUrlInConfig.description'),
+            config.url,
+            i18n.t('errors.config.invalidUrlInConfig.help')));
 
-        return Promise.reject(new Error('invalid site url'));
+        return Promise.reject(new Error(i18n.t('errors.config.invalidUrlInConfig.error')));
     }
 
     parsedUrl = url.parse(config.url || 'invalid', false, true);
 
     if (/\/ghost(\/|$)/.test(parsedUrl.pathname)) {
-        errors.logError(new Error('Your site url in config.js cannot contain a subdirectory called ghost.'), config.url, 'Please rename the subdirectory before restarting');
+        errors.logError(
+            new Error(i18n.t('errors.config.urlCannotContainGhostSubdir.description'),
+            config.url,
+            i18n.t('errors.config.urlCannotContainGhostSubdir.help')));
 
-        return Promise.reject(new Error('ghost subdirectory not allowed'));
+        return Promise.reject(new Error(i18n.t('errors.config.urlCannotContainGhostSubdir.error')));
     }
 
     // Check that we have database values
     if (!config.database || !config.database.client) {
-        errors.logError(new Error('Your database configuration in config.js is invalid.'), JSON.stringify(config.database), 'Please make sure this is a valid Bookshelf database configuration');
+        errors.logError(
+            new Error(i18n.t('errors.config.dbConfigInvalid.description')),
+            JSON.stringify(config.database),
+            i18n.t('errors.config.dbConfigInvalid.help'));
 
-        return Promise.reject(new Error('invalid database configuration'));
+        return Promise.reject(new Error(i18n.t('errors.config.dbConfigInvalid.error')));
     }
 
     hasHostAndPort = config.server && !!config.server.host && !!config.server.port;
@@ -373,9 +448,12 @@ ConfigManager.prototype.validate = function () {
 
     // Check for valid server host and port values
     if (!config.server || !(hasHostAndPort || hasSocket)) {
-        errors.logError(new Error('Your server values (socket, or host and port) in config.js are invalid.'), JSON.stringify(config.server), 'Please provide them before restarting.');
+        errors.logError(
+            new Error(i18n.t('errors.config.invalidServerValues.description')),
+            JSON.stringify(config.server),
+            i18n.t('errors.config.invalidServerValues.help'));
 
-        return Promise.reject(new Error('invalid server configuration'));
+        return Promise.reject(new Error(i18n.t('errors.config.invalidServerValues.error')));
     }
 
     return Promise.resolve(config);
@@ -421,9 +499,9 @@ ConfigManager.prototype.displayDeprecated = function (item, properties, address)
         if (properties.length) {
             return self.displayDeprecated(item[property], properties, address);
         }
-        errorText = 'The configuration property [' + chalk.bold(address.join('.')) + '] has been deprecated.';
-        explanationText =  'This will be removed in a future version, please update your config.js file.';
-        helpText = 'Please check http://support.ghost.org/config for the most up-to-date example.';
+        errorText = i18n.t('errors.config.deprecatedProperty.error', {property: chalk.bold(address.join('.'))});
+        explanationText =  i18n.t('errors.config.deprecatedProperty.explanation');
+        helpText = i18n.t('errors.config.deprecatedProperty.help', {url: 'http://support.ghost.org/config'});
         errors.logWarn(errorText, explanationText, helpText);
     }
 };
