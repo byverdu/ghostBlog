@@ -2,6 +2,10 @@
  * Main JS file for Casper behaviours
  */
 
+ function getScrollableWidth(item) {
+   return item.scrollWidth - item.clientWidth;
+ }
+
 /* globals jQuery, document */
 (function ($, sr, undefined) {
     "use strict";
@@ -106,23 +110,51 @@
             return false;
         });
 
+        var scrollPosition = 0;
         // dummy example for scrolling tags container
         $containerTags.scroll(function(event) {
-          var $leftArrow = $('.arrow-left');
-          var $rightArrow = $('.arrow-right');
-          var $width = $(this).width();
-          var $maxScroll = $(this).scrollLeft();
-          var $lastItemPos = $(this).find('.tag-item').last().position().left;
-          var hasReachEnd = ($width + $maxScroll) >= $lastItemPos;
-          if ($maxScroll === 0) {
-            $leftArrow.hide();
-          }
-          if (hasReachEnd) {
-            $rightArrow.hide();
-            $leftArrow.show();
+          var $battery = $('.battery');
+          var baseClass = 'fa-battery-';
+          var scrollableWidth = getScrollableWidth(this);
+          var $actualScroll = $(this).scrollLeft();
+          var firstStep = (scrollableWidth / 4);
+          var secondStep = (scrollableWidth / 3);
+          var thirdStep = (scrollableWidth / 2);
+          var fourthStep = (scrollableWidth / 1) - 50;
+
+          if ($actualScroll > scrollPosition) {
+            // scrolling to the right
+            if ($actualScroll === 0) {
+              $battery.removeClass(baseClass + '3').addClass(baseClass + '4');
+            }
+            if ($actualScroll > 0 && $actualScroll < firstStep) {
+              $battery.removeClass(baseClass + '4').addClass(baseClass + '3');
+            }
+            if ($actualScroll > firstStep && $actualScroll < secondStep) {
+              $battery.removeClass(baseClass + '3').addClass(baseClass + '2');
+            }
+            if ($actualScroll > secondStep && $actualScroll < thirdStep) {
+              $battery.removeClass(baseClass + '2').addClass(baseClass + '1');
+            }
+            if ($actualScroll > fourthStep) {
+              $battery.removeClass(baseClass + '1').addClass(baseClass + '0');
+            }
           } else {
-            $rightArrow.show();
+            // scrolling to the left
+            if ($actualScroll >= 0 && $actualScroll < firstStep) {
+              $battery.removeClass(baseClass + '3').addClass(baseClass + '4');
+            }
+            if ($actualScroll > firstStep && $actualScroll < secondStep) {
+              $battery.removeClass(baseClass + '2').addClass(baseClass + '3');
+            }
+            if ($actualScroll > secondStep && $actualScroll < thirdStep) {
+              $battery.removeClass(baseClass + '1').addClass(baseClass + '2');
+            }
+            if ($actualScroll < fourthStep && $actualScroll > thirdStep) {
+                $battery.removeClass(baseClass + '0').addClass(baseClass + '1');
+            }
           }
+          scrollPosition = event.currentTarget.scrollLeft;
         });
 
         // top position for socialContainer when the

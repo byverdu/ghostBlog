@@ -1823,11 +1823,29 @@ pre > code{
     border-radius: 4px;
     background: #E4434D;
 }
+/*.tag-container-list::-webkit-scrollbar-track {
+    background: rgb(0,0,0);
+}*/
 
-.tag-container-index span[class*="arrow"] {
-  border: 5px solid;
+.tag-container-index .battery {
   position: absolute;
-  top: -35px;
+  top: -45px;
+  right: -40px;
+  font-size: 22px;
+}
+
+.fa-battery-0,
+.fa-battery-1 {
+  color: #E4434D;
+}
+
+.fa-battery-2 {
+  color: #FFCA05;
+}
+
+.fa-battery-3,
+.fa-battery-4 {
+  color: RGB(84, 185, 105);
 }
 
 .tag-container-index .arrow-left {
@@ -1835,7 +1853,6 @@ pre > code{
   display: none;
 }
 .tag-container-index .arrow-right {
-  right: -25px;
 }
 
 /* Scroll to top rules*/
