@@ -40,11 +40,13 @@
 
         var $postContent = $(".post-content");
         var $socialContainer = $(".social-container");
-        var $contentPos = $("#content").last().position();
+        var $contentPos = $("#content");
         var $containerTags = $(".tag-container-list");
 
         $postContent.fitVids();
-        $socialContainer.css('top', $contentPos.top + "px");
+        if ($socialContainer.length > 0 && $contentPos.length > 0) {
+          $socialContainer.css('top', $contentPos.last().position().top + "px");
+        }
 
         function updateImageWidth() {
             var $this = $(this),
@@ -157,14 +159,16 @@
           scrollPosition = event.currentTarget.scrollLeft;
         });
 
-        // top position for socialContainer when the
-        // window is resized
-        $(window).bind("resize", function(event) {
-          var $contentPosResize = $("#content").last().position();
-          if ($socialContainer.css('display') !== "none") {
-            $socialContainer.css('top', $contentPosResize.top + "px");
-          }
-        });
+        if ($socialContainer) {
+          // top position for socialContainer when the
+          // window is resized
+          $(window).bind("resize", function(event) {
+            var $contentPosResize = $("#content").last().position();
+            if ($socialContainer.css('display') !== "none") {
+              $socialContainer.css('top', $contentPosResize.top + "px");
+            }
+          });
+        }
     });
 
     // smartresize
