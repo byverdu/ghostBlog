@@ -17,11 +17,21 @@
     {{! Styles'n'Scripts }}
     {{! critical path minified css }}
     {{> "criticalPath"}}
+    {{! add links tags as http requests if JS is disabled }}
+    {{> "noScriptCss"}}
 
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{{asset "css/screen.css"}}" />
-    <link rel="stylesheet" type="text/css" href='http://fonts.googleapis.com/css?family="Noto+Serif:400,700,400italic|Open+Sans:700,400"'/>
-    <link href='http://fonts.googleapis.com/css?family=Quicksand' rel='stylesheet' type='text/css'>
+    {{! loading fonts async }}
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+    <script>
+      WebFont.load({
+        google: {
+          families: ['Quicksand']
+        }
+      });
+    </script>
+
+    {{! loadcss suff }}
+    <link rel="preload" href="{{asset "css/screen.css"}}" as="style" onload="this.rel='stylesheet'">
 
     <link type="text/plain" rel="author" href="{{@blog.url}}/humans.txt" />
 
