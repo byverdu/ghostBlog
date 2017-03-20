@@ -1781,6 +1781,7 @@ pre > code{
   max-width: 750px;
   width: 80%;
   margin: 10px auto;
+  padding-top: 20px;
 }
 
 .tag-container-list {
@@ -1795,6 +1796,7 @@ pre > code{
     overflow: auto;
     padding: 0;
     height: 40px;
+    box-shadow: 0px 0px 1px 0px lightgrey;
 }
 
 .tag-container-list .tag-item {
@@ -1830,7 +1832,7 @@ pre > code{
 .tag-container-index .battery {
   position: absolute;
   top: -45px;
-  right: -40px;
+  right: -55px;
   font-size: 22px;
 }
 
@@ -1848,11 +1850,15 @@ pre > code{
   color: RGB(84, 185, 105);
 }
 
-.tag-container-index .arrow-left {
-  left: -25px;
-  display: none;
+.fa-tags {
+  transform: rotateY(180deg);
+  margin-left: 10px;
+  color: #E4434D;
 }
-.tag-container-index .arrow-right {
+.tags-nav {
+  position: absolute;
+  top: -48px;
+  left: -130px;
 }
 
 /* Scroll to top rules*/
